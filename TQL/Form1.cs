@@ -74,6 +74,15 @@ namespace TQL
             loadConf();
             refreshCountingState();
 
+            try
+            {
+                this.Location = settings.windowPosition;
+            }
+            catch {
+                settings.Reset();
+                settings.Save();
+            }
+
             this.Location = settings.windowPosition;
             if (!settings.isExpanded) {
                 btnFold.PerformClick();
