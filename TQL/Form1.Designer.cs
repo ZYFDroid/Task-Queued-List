@@ -30,11 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             this.renderTimer = new System.Windows.Forms.Timer(this.components);
-            this.tblTaskContainer = new System.Windows.Forms.Panel();
+            this.tblTaskContainer = new System.Windows.Forms.PictureBox();
             this.scrollBarArea = new System.Windows.Forms.PictureBox();
             this.dragger = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnFold = new System.Windows.Forms.Button();
             this.tabPageBar = new System.Windows.Forms.Panel();
@@ -44,11 +49,16 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.itemTemplate = new System.Windows.Forms.Panel();
+            this.btnTaskTop = new System.Windows.Forms.Button();
+            this.btnTaskUp = new System.Windows.Forms.Button();
+            this.btnTaskDown = new System.Windows.Forms.Button();
+            this.btnTaskBottom = new System.Windows.Forms.Button();
             this.tmpButton = new System.Windows.Forms.Button();
             this.tmpCompleted = new System.Windows.Forms.Label();
             this.tmpLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gcTimer = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.tblTaskContainer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scrollBarArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dragger)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -68,7 +78,10 @@
             this.tblTaskContainer.Name = "tblTaskContainer";
             this.tblTaskContainer.Size = new System.Drawing.Size(292, 343);
             this.tblTaskContainer.TabIndex = 0;
+            this.tblTaskContainer.TabStop = false;
             this.tblTaskContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.tblTaskContainer_Paint);
+            this.tblTaskContainer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tblTaskContainer_MouseDown);
+            this.tblTaskContainer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tblTaskContainer_MouseMove);
             this.tblTaskContainer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tblTaskContainer_MouseUp);
             // 
             // scrollBarArea
@@ -96,7 +109,7 @@
             // lblTitle
             // 
             this.lblTitle.ContextMenuStrip = this.contextMenuStrip1;
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("微软雅黑", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(12, 5);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(173, 27);
@@ -111,14 +124,58 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
             this.退出ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 48);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem6});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem1.Text = "背景透明度";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem3.Tag = "64";
+            this.toolStripMenuItem3.Text = "80%";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.optacy_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem4.Tag = "100";
+            this.toolStripMenuItem4.Text = "60%";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.optacy_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem5.Tag = "150";
+            this.toolStripMenuItem5.Text = "40%";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.optacy_Click);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem6.Tag = "206";
+            this.toolStripMenuItem6.Text = "20%";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.optacy_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -156,7 +213,7 @@
             // 
             // lblFirst
             // 
-            this.lblFirst.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFirst.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFirst.Location = new System.Drawing.Point(0, 2);
             this.lblFirst.Name = "lblFirst";
             this.lblFirst.Size = new System.Drawing.Size(258, 27);
@@ -197,13 +254,53 @@
             // 
             // itemTemplate
             // 
+            this.itemTemplate.Controls.Add(this.btnTaskTop);
+            this.itemTemplate.Controls.Add(this.btnTaskUp);
+            this.itemTemplate.Controls.Add(this.btnTaskDown);
+            this.itemTemplate.Controls.Add(this.btnTaskBottom);
             this.itemTemplate.Controls.Add(this.tmpButton);
             this.itemTemplate.Controls.Add(this.tmpCompleted);
             this.itemTemplate.Controls.Add(this.tmpLabel);
-            this.itemTemplate.Location = new System.Drawing.Point(3, 419);
+            this.itemTemplate.Location = new System.Drawing.Point(3, 422);
             this.itemTemplate.Name = "itemTemplate";
             this.itemTemplate.Size = new System.Drawing.Size(283, 48);
             this.itemTemplate.TabIndex = 5;
+            // 
+            // btnTaskTop
+            // 
+            this.btnTaskTop.Location = new System.Drawing.Point(217, 33);
+            this.btnTaskTop.Name = "btnTaskTop";
+            this.btnTaskTop.Size = new System.Drawing.Size(12, 12);
+            this.btnTaskTop.TabIndex = 2;
+            this.btnTaskTop.Text = "button1";
+            this.btnTaskTop.UseVisualStyleBackColor = true;
+            // 
+            // btnTaskUp
+            // 
+            this.btnTaskUp.Location = new System.Drawing.Point(189, 33);
+            this.btnTaskUp.Name = "btnTaskUp";
+            this.btnTaskUp.Size = new System.Drawing.Size(12, 12);
+            this.btnTaskUp.TabIndex = 2;
+            this.btnTaskUp.Text = "button1";
+            this.btnTaskUp.UseVisualStyleBackColor = true;
+            // 
+            // btnTaskDown
+            // 
+            this.btnTaskDown.Location = new System.Drawing.Point(203, 33);
+            this.btnTaskDown.Name = "btnTaskDown";
+            this.btnTaskDown.Size = new System.Drawing.Size(12, 12);
+            this.btnTaskDown.TabIndex = 2;
+            this.btnTaskDown.Text = "button1";
+            this.btnTaskDown.UseVisualStyleBackColor = true;
+            // 
+            // btnTaskBottom
+            // 
+            this.btnTaskBottom.Location = new System.Drawing.Point(230, 33);
+            this.btnTaskBottom.Name = "btnTaskBottom";
+            this.btnTaskBottom.Size = new System.Drawing.Size(12, 12);
+            this.btnTaskBottom.TabIndex = 2;
+            this.btnTaskBottom.Text = "button1";
+            this.btnTaskBottom.UseVisualStyleBackColor = true;
             // 
             // tmpButton
             // 
@@ -216,8 +313,8 @@
             // 
             // tmpCompleted
             // 
-            this.tmpCompleted.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tmpCompleted.Location = new System.Drawing.Point(170, 18);
+            this.tmpCompleted.Font = new System.Drawing.Font("微软雅黑", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Strikeout))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tmpCompleted.Location = new System.Drawing.Point(56, 18);
             this.tmpCompleted.Name = "tmpCompleted";
             this.tmpCompleted.Size = new System.Drawing.Size(48, 24);
             this.tmpCompleted.TabIndex = 0;
@@ -226,7 +323,7 @@
             // 
             // tmpLabel
             // 
-            this.tmpLabel.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tmpLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tmpLabel.Location = new System.Drawing.Point(6, 7);
             this.tmpLabel.Name = "tmpLabel";
             this.tmpLabel.Size = new System.Drawing.Size(212, 35);
@@ -236,13 +333,14 @@
             // 
             // gcTimer
             // 
+            this.gcTimer.Enabled = true;
             this.gcTimer.Interval = 10000;
             this.gcTimer.Tick += new System.EventHandler(this.gcTimer_Tick);
             // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(298, 479);
+            this.ClientSize = new System.Drawing.Size(298, 482);
             this.Controls.Add(this.scrollBarArea);
             this.Controls.Add(this.itemTemplate);
             this.Controls.Add(this.panelToolbar);
@@ -257,7 +355,9 @@
             this.Name = "Form1";
             this.ShowInTaskbar = false;
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.tblTaskContainer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scrollBarArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dragger)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -270,7 +370,7 @@
         #endregion
 
         private System.Windows.Forms.Timer renderTimer;
-        private System.Windows.Forms.Panel tblTaskContainer;
+        private System.Windows.Forms.PictureBox tblTaskContainer;
         private System.Windows.Forms.PictureBox dragger;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnFold;
@@ -289,6 +389,15 @@
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Timer gcTimer;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.Button btnTaskTop;
+        private System.Windows.Forms.Button btnTaskUp;
+        private System.Windows.Forms.Button btnTaskDown;
+        private System.Windows.Forms.Button btnTaskBottom;
     }
 }
 

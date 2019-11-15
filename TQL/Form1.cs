@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,9 +24,9 @@ namespace TQL
 
         #region InitializeGDI
 
-        Color backgroundColor = Color.FromArgb(64, 0, 0, 0);
+        Color backgroundColor = Color.FromArgb(96, 0, 0, 0);
         Pen stdLine = new Pen(new SolidBrush(Color.White), 1f);
-        Brush bgPaint = new SolidBrush(Color.FromArgb(64, 0, 0, 0));
+        Brush bgPaint = new SolidBrush(Color.FromArgb(96, 0, 0, 0));
         Brush fgPaint = Brushes.White;
         Image foldImg = Properties.Resources.fold;
         float foldRotationAngel = 0;
@@ -39,6 +40,11 @@ namespace TQL
         Image chk_yes_small = Properties.Resources.chk_yes_small;
         Image chk_no_small = Properties.Resources.chk_no_small;
 
+        Image btnTop = Properties.Resources.top;
+        Image btnUp = Properties.Resources.up;
+        Image btnDown = Properties.Resources.down;
+        Image btnBottom = Properties.Resources.bottom;
+
         //Font titleBold = new System.Drawing.Font(FontFamily.GenericSerif, 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
         StringFormat alignLeft = new StringFormat(StringFormatFlags.NoWrap);
@@ -51,6 +57,8 @@ namespace TQL
 
         #endregion
 
+        Properties.Settings settings = Properties.Settings.Default;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             GDI = new GdiSystem(this);
@@ -61,13 +69,53 @@ namespace TQL
             this.Height = panelToolbar.Bottom;
 
             tblTaskContainer.MouseWheel += TblTaskContainer_MouseWheel;
-
-            for (int i = 1; i <= 14; i++)
-            {
-                tickItems.Add(new TickItem() { name = "测试"+i,ticked = i % 3 ==0 });
-            }
-            refreshCountingState();
+            this.ActiveControl = tblTaskContainer;
             
+            loadConf();
+            refreshCountingState();
+
+            this.Location = settings.windowPosition;
+            if (!settings.isExpanded) {
+                btnFold.PerformClick();
+            }
+            bgPaint = new SolidBrush(Color.FromArgb(settings.backgroundOptacy, Color.Black));
+            backgroundColor = Color.FromArgb(settings.backgroundOptacy, Color.Black);
+
+        }
+
+        void saveConf() {
+            List<String> saveLines = new List<string>();
+            foreach (TickItem ti in tickItems)
+            {
+                saveLines.Add((ti.ticked ? "T" : "F") + ti.name);
+            }
+            File.WriteAllLines("task.dat", saveLines);
+        }
+
+        void loadConf() {
+            if (!File.Exists("task.dat")) {
+                tickItems.Add(new TickItem() { name = "阅读使用须知" });
+                tickItems.Add(new TickItem() { name = "可以通过标题栏拖动界面" });
+                tickItems.Add(new TickItem() { name = "下次启动时界面会在上次退出位置" });
+                tickItems.Add(new TickItem() { name = "若界面拖不回来，再次双击程序" });
+                tickItems.Add(new TickItem() { name = "单击 加号 可以添加任务" });
+                tickItems.Add(new TickItem() { name = "单击 刷新 可移除已完成任务" });
+                tickItems.Add(new TickItem() { name = "已完成任务会保存在程序目录下" });
+                tickItems.Add(new TickItem() { name = "单击 展开/折叠 按钮展开折叠界面" });
+                tickItems.Add(new TickItem() { name = "单击复选框切换任务状态" });
+                tickItems.Add(new TickItem() { name = "可以通过排序按钮调整任务顺序" });
+                tickItems.Add(new TickItem() { name = "右键标题栏可以退出" });
+
+                return;
+            }
+            tickItems.Clear();
+            string[] lines = File.ReadAllLines("task.dat");
+            foreach (string line in lines)
+            {
+                if (line.Length > 1) {
+                    tickItems.Add(new TickItem() { name = line.Substring(1), ticked = line.StartsWith("T") });
+                }
+            }
         }
 
         void refreshCountingState() {
@@ -82,6 +130,8 @@ namespace TQL
                 lblFirst.Text = "首要事件："+tickItems.First(t => t.ticked == false).name;
                 btnCompleteFirst.Visible = true;
             }
+
+            saveConf();
         }
 
         private void TblTaskContainer_MouseWheel(object sender, MouseEventArgs e)
@@ -93,6 +143,8 @@ namespace TQL
             else if(e.Delta < 0) {
                 velotery = 0.2f;
             }
+
+            
         }
 
         List<IAnimate> animations = new List<IAnimate>();
@@ -159,11 +211,13 @@ namespace TQL
 
         int postDrag = 0;
 
+        int postSwipe = 0;
+
         int postClickX = 0;
         int postClickY = 0;
 
         public void DrawItem(Graphics g) {
-            velotery *= 0.92f;
+            velotery *= 0.95f;
             position += velotery;
             float itemHeight = itemTemplate.Height;
             float panelHeight = tblTaskContainer.Height;
@@ -199,42 +253,97 @@ namespace TQL
 
                 if (postDrag != 0) {
                     position += maxPosition / (scrollBarH - scrollBlockHeight) * (postDrag);
-                    if (position > maxPosition)
-                    {
-                        position = maxPosition;
-                    }
-                    if (position < 0)
-                    {
-                        position = 0;
-                    }
+                    
                     postDrag = 0;
                 }
 
+                if (postSwipe != 0) {
+                    if (panelLeftDown)
+                    {
+                        velotery = 0;
+                    }
+                    position += ((float)postSwipe / itemHeight);
+                    postSwipe = 0;
+                }
+
+
+                if (position > maxPosition)
+                {
+                    position = maxPosition;
+                }
+                if (position < 0)
+                {
+                    position = 0;
+                }
             }
             float itemBegin = (float)Math.Floor(position);
             float itemEnd = Math.Min((float)Math.Ceiling(position + panelItems), tickItems.Count-1);
             for (float f = itemBegin; f <= itemEnd; f+=1) {
                 float baseX = tblTaskContainer.Left;
                 float baseY = tblTaskContainer.Top + (f - position) * itemHeight;
-                TickItem ti = tickItems[(int)f];
+                int itemId = (int)f;
+                TickItem ti = tickItems[itemId];
 
                 RectangleF entryArea = new RectangleF(baseX + tmpLabel.Left, baseY + tmpLabel.Top, tmpLabel.Width, tmpLabel.Height);
+                
+                Rectangle btnTopArea = new Rectangle((int)baseX + btnTaskTop.Left, (int)baseY + btnTaskTop.Top, btnTaskTop.Width, btnTaskTop.Height);
+                Rectangle btnUpArea = new Rectangle((int)baseX + btnTaskUp.Left, (int)baseY + btnTaskUp.Top, btnTaskUp.Width, btnTaskUp.Height);
+                Rectangle btnDownArea = new Rectangle((int)baseX + btnTaskDown.Left, (int)baseY + btnTaskDown.Top, btnTaskDown.Width, btnTaskDown.Height);
+                Rectangle btnBottomArea = new Rectangle((int)baseX + btnTaskBottom.Left, (int)baseY + btnTaskBottom.Top, btnTaskBottom.Width, btnTaskBottom.Height);
 
                 RectangleF buttonArea = new RectangleF(baseX + tmpButton.Left, baseY + tmpButton.Top, tmpButton.Width, tmpButton.Height);
 
                 g.DrawString(ti.name, ti.ticked ? tmpCompleted.Font : tmpLabel.Font, fgPaint,entryArea , alignLeft);
                 g.DrawImage(ti.ticked ? chk_yes : chk_no, buttonArea);
 
+                g.DrawImage(btnTop, btnTopArea);
+                g.DrawImage(btnUp, btnUpArea);
+                g.DrawImage(btnDown, btnDownArea);
+                g.DrawImage(btnBottom, btnBottomArea);
+
                 if ( f != itemEnd) {
                     g.DrawLine(splitItem, 0, baseY + itemHeight, Width, baseY + itemHeight);
                 }
 
                 if (postClickX != 0 && postClickY != 0) {
-                    if (entryArea.Contains(postClickX, postClickY)) {
+
+
+                    if (btnTopArea.Contains(postClickX, postClickY)) {
                         postClickY = 0; postClickX = 0;
                         
                         tickItems.Remove(ti);
                         tickItems.Insert(0, ti);
+                        refreshCountingState();
+                    }
+
+                    if (btnBottomArea.Contains(postClickX, postClickY))
+                    {
+                        postClickY = 0; postClickX = 0;
+
+                        tickItems.Remove(ti);
+                        tickItems.Add(ti);
+                        refreshCountingState();
+                    }
+
+                    if (btnUpArea.Contains(postClickX, postClickY))
+                    {
+                        postClickY = 0; postClickX = 0;
+                        if (itemId > 0) {
+                            TickItem tmp = tickItems[itemId];
+                            tickItems[itemId] = tickItems[itemId - 1];
+                            tickItems[itemId - 1] = tmp;
+                        }
+                        refreshCountingState();
+                    }
+                    if (btnDownArea.Contains(postClickX, postClickY))
+                    {
+                        postClickY = 0; postClickX = 0;
+                        if (itemId < tickItems.Count-1)
+                        {
+                            TickItem tmp = tickItems[itemId];
+                            tickItems[itemId] = tickItems[itemId + 1];
+                            tickItems[itemId + 1] = tmp;
+                        }
                         refreshCountingState();
                     }
 
@@ -294,6 +403,7 @@ namespace TQL
                     foldRotationAngel = 180f * t;
                 }));
                 expand = false;
+                
             }
             else {
                 postAnimation(new IAnimate(400, delegate (float f) {
@@ -303,6 +413,8 @@ namespace TQL
                 }));
                 expand = true;
             }
+
+            settings.isExpanded = expand;
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -322,6 +434,7 @@ namespace TQL
 
                     if (f >= 1)
                     {
+                        File.AppendAllLines("completed.txt", tickItems.Where(tc => tc.ticked).Select(tc => "[" + DateTime.Now.ToString() + "] " + tc.name));
                         tickItems.RemoveAll(tc => tc.ticked == true);
                         refreshCountingState();
                         postExpand = true;
@@ -331,6 +444,7 @@ namespace TQL
                 expand = false;
             }
             else {
+                File.AppendAllLines("completed.txt",tickItems.Where(tc => tc.ticked).Select(t => "[" + DateTime.Now.ToString() + "] " + t.name));
                 tickItems.RemoveAll(tc => tc.ticked == true);
                 refreshCountingState();
             }
@@ -377,15 +491,7 @@ namespace TQL
             isDragging = false;
         }
 
-        private void tblTaskContainer_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                postClickX = tblTaskContainer.Left + e.X;
-                postClickY = tblTaskContainer.Top + e.Y;
-            }
-        }
-
+        
         private void tblTaskContainer_Paint(object sender, PaintEventArgs e)
         {
 
@@ -410,6 +516,7 @@ namespace TQL
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveConf();
             Application.Exit();
         }
 
@@ -418,9 +525,77 @@ namespace TQL
             GC.Collect();
         }
 
+        
+
+        private void tblTaskContainer_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (lenLine(e.Location, panelDownPoint) < 3)
+                {
+                    postClickX = tblTaskContainer.Left + e.X;
+                    postClickY = tblTaskContainer.Top + e.Y;
+                }
+                else {
+                    velotery = ((float)deltaY) / 24;
+                }
+                panelLeftDown = false;
+            }
+        }
+
+
+        int lenLine(Point p1, Point p2) {
+            int x1 = p1.X, x2 = p2.X, y1 = p1.Y, y2 = p2.Y;
+            return (int)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        }
+
+
+        Point panelDownPoint = Point.Empty;
+
+        bool panelLeftDown = false;
+
+        int deltaY = 0;
+
+        private void tblTaskContainer_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                panelDownPoint = e.Location;
+                panelLastPoint = e.Location;
+                panelLeftDown = true;
+            }
+        }
+
+
+        Point panelLastPoint = Point.Empty;
+        private void tblTaskContainer_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (panelLeftDown) {
+                postSwipe = -(e.Y - panelLastPoint.Y);
+                deltaY = postSwipe;
+                panelLastPoint = e.Location;
+            }
+            this.ActiveControl = tblTaskContainer;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            settings.Save();
+        }
+
+        private void optacy_Click(object sender, EventArgs e)
+        {
+            int alpha = int.Parse(((ToolStripMenuItem)sender).Tag.ToString());
+            bgPaint = new SolidBrush(Color.FromArgb(alpha, Color.Black));
+            backgroundColor = Color.FromArgb(alpha, Color.Black);
+            settings.backgroundOptacy = alpha;
+
+        }
+
         private void dragger_MouseUp(object sender, MouseEventArgs e)
         {
             dragging = false;
+            settings.windowPosition = Location;
         }
     }
 
