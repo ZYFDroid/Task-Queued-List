@@ -34,6 +34,7 @@ namespace TQL
         float refreshRotationAngel = 0;
         Image addImg = Properties.Resources.add;
         float addRotateAngel = 0;
+        Image reorderImage = Properties.Resources.reorder;
 
         Image chk_yes = Properties.Resources.chk_yes;
         Image chk_no = Properties.Resources.chk_no;
@@ -173,6 +174,7 @@ namespace TQL
                 DrawUtils.drawRotateImg(g, foldImg, foldRotationAngel, btnFold.Left + btnFold.Height / 2, btnFold.Top + btnFold.Height / 2, btnFold.Width, btnFold.Height);
                 DrawUtils.drawRotateImg(g, refreshImg, refreshRotationAngel, btnRefresh.Left + btnRefresh.Height / 2, btnRefresh.Top + btnRefresh.Height / 2, btnRefresh.Width, btnRefresh.Height);
                 DrawUtils.drawRotateImg(g, addImg, addRotateAngel, btnAdd.Left + btnAdd.Height / 2, btnAdd.Top + btnAdd.Height / 2, btnAdd.Width, btnAdd.Height);
+                DrawUtils.drawRotateImg(g, reorderImage, 0, btnReorder.Left + btnReorder.Height / 2, btnReorder.Top + btnReorder.Height / 2, btnReorder.Width, btnReorder.Height);
 
                 g.DrawString(lblFirst.Text, lblFirst.Font, fgPaint, new RectangleF(new Point(lblFirst.Left + tabPageBar.Left + 6, lblFirst.Top + tabPageBar.Top), lblFirst.Size), alignLeft);
 
@@ -305,57 +307,62 @@ namespace TQL
                 g.DrawString(ti.name, ti.ticked ? tmpCompleted.Font : tmpLabel.Font, fgPaint,entryArea , alignLeft);
                 g.DrawImage(ti.ticked ? chk_yes : chk_no, buttonArea);
 
-                g.DrawImage(btnTop, btnTopArea);
-                g.DrawImage(btnUp, btnUpArea);
-                g.DrawImage(btnDown, btnDownArea);
-                g.DrawImage(btnBottom, btnBottomArea);
-
+                if (isReordering)
+                {
+                    g.DrawImage(btnTop, btnTopArea);
+                    g.DrawImage(btnUp, btnUpArea);
+                    g.DrawImage(btnDown, btnDownArea);
+                    g.DrawImage(btnBottom, btnBottomArea);
+                }
                 if ( f != itemEnd) {
                     g.DrawLine(splitItem, 0, baseY + itemHeight, Width, baseY + itemHeight);
                 }
 
                 if (postClickX != 0 && postClickY != 0) {
-
-
-                    if (btnTopArea.Contains(postClickX, postClickY)) {
-                        postClickY = 0; postClickX = 0;
-                        
-                        tickItems.Remove(ti);
-                        tickItems.Insert(0, ti);
-                        refreshCountingState();
-                    }
-
-                    if (btnBottomArea.Contains(postClickX, postClickY))
+                    if (isReordering)
                     {
-                        postClickY = 0; postClickX = 0;
 
-                        tickItems.Remove(ti);
-                        tickItems.Add(ti);
-                        refreshCountingState();
-                    }
-
-                    if (btnUpArea.Contains(postClickX, postClickY))
-                    {
-                        postClickY = 0; postClickX = 0;
-                        if (itemId > 0) {
-                            TickItem tmp = tickItems[itemId];
-                            tickItems[itemId] = tickItems[itemId - 1];
-                            tickItems[itemId - 1] = tmp;
-                        }
-                        refreshCountingState();
-                    }
-                    if (btnDownArea.Contains(postClickX, postClickY))
-                    {
-                        postClickY = 0; postClickX = 0;
-                        if (itemId < tickItems.Count-1)
+                        if (btnTopArea.Contains(postClickX, postClickY))
                         {
-                            TickItem tmp = tickItems[itemId];
-                            tickItems[itemId] = tickItems[itemId + 1];
-                            tickItems[itemId + 1] = tmp;
-                        }
-                        refreshCountingState();
-                    }
+                            postClickY = 0; postClickX = 0;
 
+                            tickItems.Remove(ti);
+                            tickItems.Insert(0, ti);
+                            refreshCountingState();
+                        }
+
+                        if (btnBottomArea.Contains(postClickX, postClickY))
+                        {
+                            postClickY = 0; postClickX = 0;
+
+                            tickItems.Remove(ti);
+                            tickItems.Add(ti);
+                            refreshCountingState();
+                        }
+
+                        if (btnUpArea.Contains(postClickX, postClickY))
+                        {
+                            postClickY = 0; postClickX = 0;
+                            if (itemId > 0)
+                            {
+                                TickItem tmp = tickItems[itemId];
+                                tickItems[itemId] = tickItems[itemId - 1];
+                                tickItems[itemId - 1] = tmp;
+                            }
+                            refreshCountingState();
+                        }
+                        if (btnDownArea.Contains(postClickX, postClickY))
+                        {
+                            postClickY = 0; postClickX = 0;
+                            if (itemId < tickItems.Count - 1)
+                            {
+                                TickItem tmp = tickItems[itemId];
+                                tickItems[itemId] = tickItems[itemId + 1];
+                                tickItems[itemId + 1] = tmp;
+                            }
+                            refreshCountingState();
+                        }
+                    }
                     if (buttonArea.Contains(postClickX, postClickY))
                     {
                         postClickY = 0; postClickX = 0;
@@ -599,6 +606,13 @@ namespace TQL
             backgroundColor = Color.FromArgb(alpha, Color.Black);
             settings.backgroundOptacy = alpha;
 
+        }
+
+        bool isReordering = false;
+
+        private void btnReorder_Click(object sender, EventArgs e)
+        {
+            isReordering = !isReordering;
         }
 
         private void dragger_MouseUp(object sender, MouseEventArgs e)

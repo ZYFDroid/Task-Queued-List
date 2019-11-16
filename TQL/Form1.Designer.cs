@@ -58,6 +58,7 @@
             this.tmpLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gcTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnReorder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tblTaskContainer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scrollBarArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dragger)).BeginInit();
@@ -112,7 +113,7 @@
             this.lblTitle.Font = new System.Drawing.Font("微软雅黑", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(12, 5);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(173, 27);
+            this.lblTitle.Size = new System.Drawing.Size(123, 27);
             this.lblTitle.TabIndex = 2;
             this.lblTitle.Text = "事件列表";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -337,6 +338,18 @@
             this.gcTimer.Interval = 10000;
             this.gcTimer.Tick += new System.EventHandler(this.gcTimer_Tick);
             // 
+            // btnReorder
+            // 
+            this.btnReorder.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReorder.Location = new System.Drawing.Point(155, 3);
+            this.btnReorder.Name = "btnReorder";
+            this.btnReorder.Size = new System.Drawing.Size(30, 30);
+            this.btnReorder.TabIndex = 3;
+            this.btnReorder.Text = "移";
+            this.toolTip1.SetToolTip(this.btnReorder, "显示/隐藏重新排序任务的按钮");
+            this.btnReorder.UseVisualStyleBackColor = true;
+            this.btnReorder.Click += new System.EventHandler(this.btnReorder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -345,6 +358,7 @@
             this.Controls.Add(this.itemTemplate);
             this.Controls.Add(this.panelToolbar);
             this.Controls.Add(this.tabPageBar);
+            this.Controls.Add(this.btnReorder);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnFold);
@@ -398,6 +412,7 @@
         private System.Windows.Forms.Button btnTaskUp;
         private System.Windows.Forms.Button btnTaskDown;
         private System.Windows.Forms.Button btnTaskBottom;
+        private System.Windows.Forms.Button btnReorder;
     }
 }
 
