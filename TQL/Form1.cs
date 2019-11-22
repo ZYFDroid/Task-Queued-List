@@ -161,7 +161,7 @@ namespace TQL
 
         private void renderTimer_Tick(object sender, EventArgs e)
         {
-            
+            for(int repeat=0;repeat<5;repeat++)
             {
                 GDI.Graphics.Clear(backgroundColor);
                 Graphics g = GDI.Graphics;

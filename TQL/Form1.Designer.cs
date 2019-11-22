@@ -57,8 +57,9 @@
             this.tmpCompleted = new System.Windows.Forms.Label();
             this.tmpLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.gcTimer = new System.Windows.Forms.Timer(this.components);
             this.btnReorder = new System.Windows.Forms.Button();
+            this.gcTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnEdit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tblTaskContainer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scrollBarArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dragger)).BeginInit();
@@ -110,7 +111,7 @@
             // lblTitle
             // 
             this.lblTitle.ContextMenuStrip = this.contextMenuStrip1;
-            this.lblTitle.Font = new System.Drawing.Font("微软雅黑", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(12, 5);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(123, 27);
@@ -128,7 +129,7 @@
             this.toolStripMenuItem1,
             this.退出ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(140, 48);
             // 
             // toolStripMenuItem1
             // 
@@ -138,13 +139,13 @@
             this.toolStripMenuItem5,
             this.toolStripMenuItem6});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(139, 22);
             this.toolStripMenuItem1.Text = "背景透明度";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(96, 22);
             this.toolStripMenuItem3.Tag = "64";
             this.toolStripMenuItem3.Text = "80%";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.optacy_Click);
@@ -152,7 +153,7 @@
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(96, 22);
             this.toolStripMenuItem4.Tag = "100";
             this.toolStripMenuItem4.Text = "60%";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.optacy_Click);
@@ -160,7 +161,7 @@
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(96, 22);
             this.toolStripMenuItem5.Tag = "150";
             this.toolStripMenuItem5.Text = "40%";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.optacy_Click);
@@ -168,7 +169,7 @@
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(96, 22);
             this.toolStripMenuItem6.Tag = "206";
             this.toolStripMenuItem6.Text = "20%";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.optacy_Click);
@@ -176,7 +177,7 @@
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -214,7 +215,7 @@
             // 
             // lblFirst
             // 
-            this.lblFirst.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFirst.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFirst.Location = new System.Drawing.Point(0, 2);
             this.lblFirst.Name = "lblFirst";
             this.lblFirst.Size = new System.Drawing.Size(258, 27);
@@ -256,6 +257,7 @@
             // itemTemplate
             // 
             this.itemTemplate.Controls.Add(this.btnTaskTop);
+            this.itemTemplate.Controls.Add(this.btnEdit);
             this.itemTemplate.Controls.Add(this.btnTaskUp);
             this.itemTemplate.Controls.Add(this.btnTaskDown);
             this.itemTemplate.Controls.Add(this.btnTaskBottom);
@@ -278,7 +280,7 @@
             // 
             // btnTaskUp
             // 
-            this.btnTaskUp.Location = new System.Drawing.Point(189, 33);
+            this.btnTaskUp.Location = new System.Drawing.Point(191, 33);
             this.btnTaskUp.Name = "btnTaskUp";
             this.btnTaskUp.Size = new System.Drawing.Size(12, 12);
             this.btnTaskUp.TabIndex = 2;
@@ -287,7 +289,7 @@
             // 
             // btnTaskDown
             // 
-            this.btnTaskDown.Location = new System.Drawing.Point(203, 33);
+            this.btnTaskDown.Location = new System.Drawing.Point(204, 33);
             this.btnTaskDown.Name = "btnTaskDown";
             this.btnTaskDown.Size = new System.Drawing.Size(12, 12);
             this.btnTaskDown.TabIndex = 2;
@@ -314,7 +316,7 @@
             // 
             // tmpCompleted
             // 
-            this.tmpCompleted.Font = new System.Drawing.Font("微软雅黑", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Strikeout))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tmpCompleted.Font = new System.Drawing.Font("Microsoft YaHei", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Strikeout))), System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tmpCompleted.Location = new System.Drawing.Point(56, 18);
             this.tmpCompleted.Name = "tmpCompleted";
             this.tmpCompleted.Size = new System.Drawing.Size(48, 24);
@@ -324,19 +326,13 @@
             // 
             // tmpLabel
             // 
-            this.tmpLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tmpLabel.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tmpLabel.Location = new System.Drawing.Point(6, 7);
             this.tmpLabel.Name = "tmpLabel";
             this.tmpLabel.Size = new System.Drawing.Size(212, 35);
             this.tmpLabel.TabIndex = 0;
             this.tmpLabel.Text = "模板";
             this.tmpLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // gcTimer
-            // 
-            this.gcTimer.Enabled = true;
-            this.gcTimer.Interval = 10000;
-            this.gcTimer.Tick += new System.EventHandler(this.gcTimer_Tick);
             // 
             // btnReorder
             // 
@@ -349,6 +345,21 @@
             this.toolTip1.SetToolTip(this.btnReorder, "显示/隐藏重新排序任务的按钮");
             this.btnReorder.UseVisualStyleBackColor = true;
             this.btnReorder.Click += new System.EventHandler(this.btnReorder_Click);
+            // 
+            // gcTimer
+            // 
+            this.gcTimer.Enabled = true;
+            this.gcTimer.Interval = 10000;
+            this.gcTimer.Tick += new System.EventHandler(this.gcTimer_Tick);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Location = new System.Drawing.Point(178, 33);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(12, 12);
+            this.btnEdit.TabIndex = 2;
+            this.btnEdit.Text = "button1";
+            this.btnEdit.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -413,6 +424,7 @@
         private System.Windows.Forms.Button btnTaskDown;
         private System.Windows.Forms.Button btnTaskBottom;
         private System.Windows.Forms.Button btnReorder;
+        private System.Windows.Forms.Button btnEdit;
     }
 }
 
